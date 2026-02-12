@@ -21,3 +21,4 @@ stima_costo_base(self): restituisce un valore numerico generico (es. costo base 
 Regola 1 – Incapsulamento: tutti gli attributi devono essere privati (__attributo) e accessibili solo
 tramite getter/setter.
 '''
+# Questa è una prova di commit nel branch
