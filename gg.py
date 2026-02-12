@@ -20,8 +20,6 @@ Classe base: Elettrodomestico:
 
 import datetime
 
-import ec as EC
-
 class Elettrodomestico:
     def __init__(self, marca, modello, anno_acquisto, guasto):
         self.__marca = marca
@@ -58,9 +56,4 @@ class Elettrodomestico:
         
     def set_guasto(self, guasto):
         self.__guasto = guasto
-        
-class Lavatrice(Elettrodomestico):
-    def __init__(self, marca, modello, anno_acquisto, guasto, capacita_kg, giri_centrifuga):
-        super().__init__(marca, modello, anno_acquisto, guasto)
-        self.capacita_kg = capacita_kg
-        self.giri_centrifuga = giri_centrifuga
+    
