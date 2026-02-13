@@ -1,23 +1,3 @@
-'''
-Esercizio: Gestionale Officina Elettrodomestici
-Progettare un sistema a oggetti per un'officina che ripara elettrodomestici.
-Il programma deve modellare elettrodomestici, ticket di riparazione e operazioni dell'officina utilizzando incapsulamento, ereditarietà, polimorfismo, type() e metodi variatici (*args, **kwargs).
-
-Classe base: Elettrodomestico:
-    Attributi privati (__ doppio underscore):
-        - __marca (stringa)
-        - __modello (stringa)
-        - __anno_acquisto (intero)
-        - __guasto (stringa)
-    Metodi:
-        - __init__(self, marca, modello, anno_acquisto, guasto): costruttore
-        - descrizione(self): restituisce stringa con marca, modello, anno, guasto
-        - stima_costo_base(self): restituisce un valore numerico (costo base diagnosi)
-        - Getter e setter per tutti gli attributi (controllo: anno non può essere nel futuro)
-
-    Regola 1 - Incapsulamento: attributi privati (__), accessibili solo tramite getter/setter.
-'''
-
 import datetime
 
 class Elettrodomestico:
@@ -56,4 +36,3 @@ class Elettrodomestico:
         
     def set_guasto(self, guasto):
         self.__guasto = guasto
-    
