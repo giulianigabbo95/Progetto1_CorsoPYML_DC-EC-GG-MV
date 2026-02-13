@@ -82,3 +82,55 @@ Il programma deve modellare elettrodomestici, ticket di riparazione e operazioni
 
 '''
 
+
+
+
+'''
+#MANCA IL RESTO DEL MAIN
+# Nel menu, case "1" per aggiungere elettrodomestico:
+case "3":
+    print("Tipo alimentazione:")
+    print("1. Elettrico")
+    print("2. Gas")
+    scelta_alim = input("Scegli (1/2): ")
+    
+    if scelta_alim == "1":
+        alimentazione = "elettrico"
+    elif scelta_alim == "2":
+        alimentazione = "gas"
+    else:
+        pass
+    
+    scelta_ventilato = input("Ha funzione ventilata? (s/n): ").lower() == "s" # Torna True
+    
+
+# Metodo altenativo 1 alla riga superiore:
+    scelta_ventilato = input("Ha funzione ventilata? (s/n): ").lower()
+    
+    if scelta_ventilato == "s"
+        ventilato = True
+    elif scelta_ventilato == "n"
+        ventilato == False
+    else
+        print("Inserimento non corretto. Imposto NON ventilato di default")
+        ventilato = False
+
+# Metodo altenativo 2 alla riga superiore:
+    while True
+        
+        scelta_ventilato = input("Ha funzione ventilata? (s/n): ").lower()
+        
+        if scelta_ventilato == "s"
+            ventilato = True
+            break
+        elif scelta_ventilato == "n"
+            ventilato == False
+            break
+        else
+            print("Inserimento non corretto. Riprova!")
+
+
+    forno_1 = Forno(marca, modello, anno, guasto, alimentazione, ventilato)
+    officina.aggiungi_elettrodomestico(elettro)
+    
+'''

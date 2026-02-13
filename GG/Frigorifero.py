@@ -1,5 +1,4 @@
-class Elettrodomestico:
-    pass
+import Elettrodomestico
 
 class Frigorifero(Elettrodomestico):
     
@@ -15,6 +14,3 @@ class Frigorifero(Elettrodomestico):
         if self.ha_freezer:
             costo += 15
         return costo
-
-
-
