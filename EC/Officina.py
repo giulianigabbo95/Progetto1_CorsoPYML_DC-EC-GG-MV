@@ -11,7 +11,7 @@ class Officina:
         if type(ticket) == TicketRiparazione:
             self.tickets.append(ticket)
         else:
-            print("Errore: oggetto non valido.")
+            print("Errore: oggetto tipo non valido.")
 
     def chiudiTicket(self, id_ticket):
         for ticket in self.tickets:
