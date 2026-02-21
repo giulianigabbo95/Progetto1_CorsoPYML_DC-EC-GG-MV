@@ -8,16 +8,16 @@ Progettare un sistema a oggetti per un'officina che ripara elettrodomestici.
 Il programma deve modellare elettrodomestici, ticket di riparazione e operazioni dell'officina utilizzando incapsulamento, ereditarietà, polimorfismo, type() e metodi variatici (*args, **kwargs).
 
 1. Classe base: Elettrodomestico:
-    Attributi privati (__ doppio underscore):
+    Attributi privati (__ (doppio underscore)):
         - __marca (stringa)
         - __modello (stringa)
         - __anno_acquisto (intero)
         - __guasto (stringa)
     Metodi:
         - __init__(self, marca, modello, anno_acquisto, guasto): costruttore
-        - descrizione(self): restituisce stringa con marca, modello, anno, guasto
-        - stima_costo_base(self): restituisce un valore numerico (costo base diagnosi)
-        - Getter e setter per tutti gli attributi (controllo: anno non può essere nel futuro)
+        - descriviElettrodomestico(self): restituisce stringa con marca, modello, anno, guasto
+        - stimaCostoBase(self): restituisce un valore numerico (costo base diagnosi)
+        - Getter e Setter per tutti gli attributi (controllo: anno non può essere nel futuro)
     Regola 1 - Incapsulamento: attributi privati (__), accessibili solo tramite getter/setter.
     
 2. Classi derivate (Ereditarietà + Polimorfismo):
@@ -43,7 +43,7 @@ Il programma deve modellare elettrodomestici, ticket di riparazione e operazioni
         Regola 2 - Ereditarietà: tutte le classi derivate devono chiamare super().__init__() nel costruttore.
         Regola 3 - Polimorfismo: ogni sottoclasse implementa la propria versione di stimaCostoBase().
 
-3. Classe Ticket Riparazione:
+3. Classe TicketRiparazione:
     Classe che rappresenta un ticket di riparazione aperto in officina.
     Attributi privati (__):
         - __id_ticket (intero o stringa univoca)
@@ -89,60 +89,105 @@ Il programma deve modellare elettrodomestici, ticket di riparazione e operazioni
 import Lavatrice
 import Frigorifero
 import Forno
-#import Ticket
+#import TicketRiparazione
 import Officina
 
 officina = Officina("Officina Elettrodomestici Roma")
 
 while True:
-    print(f"{officina.get_nome()}")
-    print("1. Aggiungi elettrodomestico")
-    print("2. Apri ticket di riparazione")
-    print("3. Aggiungi servizi extra a un ticket")
-    print("4. Chiudi ticket")
-    print("5. Visualizza tutti gli elettrodomestici")
-    print("6. Filtra elettrodomestici per tipo")
-    print("7. Visualizza totale incassato")
+    print("Menu", officina.get_nome())
+    print("Come desideri infastidire i dipendenti sottopagati?")
+    print("1. Aggiungi Elettrodomestico")
+    print("2. Apri Ticket Riparazione")
+    print("3. Aggiungi Servizi Extra a Ticket")
+    print("4. Chiudi Ticket")
+    print("5. Visualizza Tutti gli Elettrodomestici")
+    print("6. Filtra Elettrodomestici per Tipo")
+    print("7. Visualizza Totale Incassato")
     print("8. Esci")
-    
+
     scelta = input("Scegli: ")
-    
+
     match scelta:
         case "1":
-            print("Tipo Elettrodomestico")
+            print("Tipo Elettrodomestico da Aggiungere:")
             print("1. Lavatrice")
             print("2. Frigorifero")
             print("3. Forno")
-            
+
             tipo = input("Scegli: ")
             marca = input("Marca: ")
             modello = input("Modello: ")
             anno = int(input("Anno acquisto: "))
             guasto = input("Descrizione guasto: ")
-            
+
             match tipo:
                 case "1":
-                    capacita = int(input("Capacità (kg): "))
-                    giri = int(input("Giri centrifuga: "))
-                    elettro = Lavatrice(marca, modello, anno, guasto, capacita, giri)
-                    officina.aggiungiElettrodomestico(elettro)
-                
+                    capacita = int(input("Capacità (Kg): "))
+                    giri = int(input("Giri della Centrifuga: "))
+                    elettrodom = Lavatrice(marca, modello, anno, guasto, capacita, giri)
+                    officina.aggiungiElettrodomestico(elettrodom)   
                 case "2":
                     litri = int(input("Litri: "))
-                    freezer = input("Ha freezer? (s/n): ").lower() == "s"
-                    elettro = Frigorifero(marca, modello, anno, guasto, litri, freezer)
-                    officina.aggiungiElettrodomestico(elettro)
-                
+                    freezer = input("Ha il Freezer? [S]/[N]): ").lower() == "s"
+                    elettrodom = Frigorifero(marca, modello, anno, guasto, litri, freezer)
+                    officina.aggiungiElettrodomestico(elettrodom)
                 case "3":
-                    print("Tipo alimentazione (elettrico/gas): ")
-                    alimentazione = input().lower()
-                    ventilato = input("Ha funzione ventilata? (s/n): ").lower() == "s"
-                    elettro = Forno(marca, modello, anno, guasto, alimentazione, ventilato)
-                    officina.aggiungiElettrodomestico(elettro)
-                
+                    while True:
+                        alimentazione = input("Tipo di Alimentazione [Elettrico]/[Gas]: ").lower()
+                        if alimentazione == "gas" or alimentazione == "elettrico":
+                            break
+                        else:
+                            print("Cosa pensi, che aggiusti utensili a", alimentazione, "o a Carbone? Riprova!")
+                    ventilato = input("Ha la Funzione ventilata? [S]/[N]: ").lower() == "s"
+                    elettrodom = Forno(marca, modello, anno, guasto, alimentazione, ventilato)
+                    officina.aggiungiElettrodomestico(elettrodom)
                 case _:
                     print("Tipo non valido!")
-    '''      
+
+        case "2":
+            if officina.get_elettrodomestici():
+                print("Nessun elettrodomestico in officina!")
+                continue
+            print("Elettrodomestici disponibili:")
+            for i in range(len(officina.elettrodomestici)):
+                print(i+1, "-", officina.elettrodomestici[i].descriviElettrodomestico())
+            selezione = input("Scegli numero: ")
+            if selezione.isdigit():
+                pass
+            else:
+                print("Non hai inserito un numero!")
+
+        case "3":
+            pass
+
+        case "4":
+            pass
+
+        case "5":
+            if len(officina.elettrodomestici) == 0:
+                print("Nessun elettrodomestico in officina!")
+            else:
+                print("Elettrodomestici:")
+                for i in range(len(officina.elettrodomestici)):
+                    print(i+1, "-", officina.elettrodomestici[i].descriviElettrodomestico())
+
+        case "6":
+            officina.calcolaStatisticheTipo()
+
+        case "7":
+            print("Totale preventivi:", officina.calcolaTotalePreventivo(), "€")
+
+        case "8":
+            print("Grazie per aver usato il gestionale officina!")
+            print("Per farvore non farti più rivedere!")
+            break
+        
+        case _:
+            print("Possibile che tu sia così incapace?")
+
+
+'''      
         case "2":
             if officina.get_elettrodomestici():
                 print("Nessun elettrodomestico in officina!")
@@ -156,7 +201,9 @@ while True:
                 officina.aggiungiTicket(elettro)
             else:
                 print("Scelta non valida!")
-    '''   
+ 
+    
+     
         case "3":
             officina.stampa_ticket_aperti()
             if officina._Officina__ticket:
@@ -202,7 +249,7 @@ while True:
             match tipo_filtro:
                 case "1":
                     officina.cerca_per_tipo(Lavatrice)
-                case "2":
+                case "2":regno di geovageova
                     officina.cerca_per_tipo(Frigorifero)
                 case "3":
                     officina.cerca_per_tipo(Forno)
@@ -222,7 +269,7 @@ while True:
 
 
 
-'''
+
 #MANCA IL RESTO DEL MAIN
 # Nel menu, case "1" per aggiungere elettrodomestico:
 case "3":

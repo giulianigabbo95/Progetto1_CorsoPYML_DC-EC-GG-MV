@@ -1,48 +1,64 @@
-import Ticket as TicketRiparazione
+import Lavatrice
+import Frigorifero
+import Forno
+import TicketRiparazione
 
 class Officina:
+
     def __init__(self, nome):
         self.nome = nome
-        self.tickets = []
+        self.__tickets = []
         self.__elettrodomestici = []
+
 
     def aggiungiElettrodomestico(self, elettrodomestico):
         self.__elettrodomestici.append(elettrodomestico)
-        print(f"Aggiunto: {elettrodomestico.descrizione()}")
-    
+        print("Aggiunto:", elettrodomestico.descriviElettrodomestico())
+
     def aggiungiTicket(self, ticket):
         if type(ticket) == TicketRiparazione:
-            self.tickets.append(ticket)
+            self.__tickets.append(ticket)
+            print("Ticket", ticket.get_id(), "aggiunto con successo.")
         else:
-            print("Errore: oggetto tipo non valido.")
-    
+            print("Errore: Oggetto di Tipo non valido.")
+
     def chiudiTicket(self, id_ticket):
-        for ticket in self.tickets:
-            if ticket.getId() == id_ticket:
+        for ticket in self.__tickets:
+            if ticket.get_id() == id_ticket:
                 ticket.setStato("chiuso")
                 print("Ticket chiuso.")
                 return
         print("Ticket non trovato.")
 
     def stampaTicketAperti(self):
-        for ticket in self.tickets:
+        for ticket in self.__tickets:
             if ticket.getStato() != "chiuso":
-                elettro = ticket.getElettrodomestico()
-                print(f"ID: {ticket.getId()} | "
-                      f"Tipo: {type(elettro).__name__} | "
-                      f"Stato: {ticket.getStato()}")
+                elettro = ticket.get_elettrodomestico()
+                print("ID:", ticket.getId(), "| Tipo:", type(elettro).__name__, "| Stato:", ticket.getStato())
 
-    def totalePreventivo(self):
+    def calcolaTotalePreventivo(self):
         totale = 0
-        for ticket in self.tickets:
-            totale += ticket.getUltimoPreventivo()
+        for ticket in self.__tickets:
+            totale += ticket.calcolaPreventivo()
         return totale
+
+
+    def calcolaStatisticheTipo(self):
+        conteggio = {"Lavatrice": 0, "Frigorifero": 0, "Forno": 0}
+        for ticket in self.tickets:
+            elettro = ticket.get_elettrodomestico()
+            if type(elettro) == Lavatrice:
+                conteggio["Lavatrice"] += 1
+            elif type(elettro) == Frigorifero:
+                conteggio["Frigorifero"] += 1
+            elif type(elettro) == Forno:
+                conteggio["Forno"] += 1
+        print("Lavatrici:", conteggio['Lavatrice'])
+        print("Frigoriferi:", conteggio['Frigorifero'])
+        print("Forni:", conteggio['Forno'])
+
 
     def get_nome(self):
         return self.__nome
-    
     def get_elettrodomestici(self):
         return self.__elettrodomestici
-    
-    def __str__(self):
-        print 
