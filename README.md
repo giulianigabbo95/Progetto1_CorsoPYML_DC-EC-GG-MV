@@ -1,2 +1,2 @@
-# ProgettoCorso_ECGGMV
-Progetto del Corso Python &amp; Machine Learning di Elisabetta Carella, Gabriele Giuliani, Maria Visone e Davide Cognetta.
+# Progetto #1
+Progetto del Corso Python and Machine Learning di Davide Cognetta, Elisabetta Carella, Gabriele Giuliani, Maria Visone.
