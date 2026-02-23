@@ -1,4 +1,4 @@
-import Elettrodomestico
+from Elettrodomestico import Elettrodomestico
 
 class Lavatrice(Elettrodomestico):
 

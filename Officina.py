@@ -1,7 +1,7 @@
-import Lavatrice
-import Frigorifero
-import Forno
-import TicketRiparazione
+from Lavatrice import Lavatrice
+from Frigorifero import Frigorifero
+from Forno import Forno
+from TicketRiparazione import TicketRiparazione
 
 class Officina:
 
@@ -9,11 +9,19 @@ class Officina:
         self.nome = nome
         self.__tickets = []
         self.__elettrodomestici = []
+        self.servizi_aggiuntivi = { 
+            "Ritiro a Domicilio" : 20,
+            "Consegna Rapida" : 15,
+            "Ricambi Originali" : 50,
+            "Pulizia Approfondita" : 10
+        }
 
 
     def aggiungiElettrodomestico(self, elettrodomestico):
         self.__elettrodomestici.append(elettrodomestico)
-        print("Aggiunto:", elettrodomestico.descriviElettrodomestico())
+        print(elettrodomestico.descriviElettrodomestico())
+        elettrodomestico.descriviElettrodomestico()
+        print("Aggiunto Elettrodomestico:", elettrodomestico.get_marca, elettrodomestico.get_modello)
 
     def aggiungiTicket(self, ticket):
         if type(ticket) == TicketRiparazione:
@@ -43,6 +51,17 @@ class Officina:
         return totale
 
 
+    def stampaServizi(self):
+        print("Servizi Officina", self.nome)
+        if len(self.servizi) == 0:
+            print("Nessun servizio disponibile")
+        else:
+            contatore = 0
+            for nome, costo in self.servizi.items():
+                print(contatore+1, "-", nome, ",", costo)
+                contatore += 1
+
+
     def calcolaStatisticheTipo(self):
         conteggio = {"Lavatrice": 0, "Frigorifero": 0, "Forno": 0}
         for ticket in self.tickets:
@@ -58,7 +77,7 @@ class Officina:
         print("Forni:", conteggio['Forno'])
 
 
-    def get_nome(self):
-        return self.__nome
+    def get_tickets(self):
+        return self.__tickets
     def get_elettrodomestici(self):
         return self.__elettrodomestici

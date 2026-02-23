@@ -10,11 +10,11 @@ class Elettrodomestico:
 
 
     def descriviElettrodomestico(self):
-        print("L'elettrodomestico", self.__modello, "della marca", self.__marca, "acquistato nel", self.__anno_acquisto, "si è rotto per il guasto:", self.__guasto)
+        print("L'elettrodomestico", self.__modello, "della marca", self.__marca, "acquistato nel", self.__anno_acquisto, "rotto per il guasto:", self.__guasto)
 
     def stimaCostoBase(self):
         costo_diagnosi = 50
-        print("Il costo della diagnosi è:", costo_diagnosi)
+        print("Il costo base della diagnosi è:", costo_diagnosi)
         return costo_diagnosi
 
 

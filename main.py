@@ -85,17 +85,17 @@ Il programma deve modellare elettrodomestici, ticket di riparazione e operazioni
     Requisito: il metodo deve utilizzare type() (o varianti consigliate) per determinare il tipo reale degli oggetti.
 
 '''
-#import Elettrodomestico
-import Lavatrice
-import Frigorifero
-import Forno
-#import TicketRiparazione
-import Officina
+from Lavatrice import Lavatrice
+from Frigorifero import Frigorifero
+from Forno import Forno
+from TicketRiparazione import TicketRiparazione
+from Officina import Officina
 
-officina = Officina("Officina Elettrodomestici Roma")
+bob_aggiustatutto = Officina("Officina Elettrodomestici Roma")
 
 while True:
-    print("Menu", officina.get_nome())
+    print("")
+    print("Menu", bob_aggiustatutto.nome)
     print("Come desideri infastidire i dipendenti sottopagati?")
     print("1. Aggiungi Elettrodomestico")
     print("2. Apri Ticket Riparazione")
@@ -105,6 +105,7 @@ while True:
     print("6. Filtra Elettrodomestici per Tipo")
     print("7. Visualizza Totale Incassato")
     print("8. Esci")
+    print("")
 
     scelta = input("Scegli: ")
 
@@ -114,24 +115,31 @@ while True:
             print("1. Lavatrice")
             print("2. Frigorifero")
             print("3. Forno")
+            print("")
 
             tipo = input("Scegli: ")
+            if tipo == '0':
+                continue
             marca = input("Marca: ")
             modello = input("Modello: ")
-            anno = int(input("Anno acquisto: "))
-            guasto = input("Descrizione guasto: ")
+            while True:
+                anno = input("Anno Acquisto: ")
+                if anno.isdigit() == True and len(anno) == 4:   # Se anno era int avrei usato len(str(anno)) al posto di len(anno)
+                    break
+                print("Riprova")
+            guasto = input("Descrizione Guasto: ")
 
             match tipo:
                 case "1":
                     capacita = int(input("Capacità (Kg): "))
                     giri = int(input("Giri della Centrifuga: "))
                     elettrodom = Lavatrice(marca, modello, anno, guasto, capacita, giri)
-                    officina.aggiungiElettrodomestico(elettrodom)   
+                    bob_aggiustatutto.aggiungiElettrodomestico(elettrodom)   
                 case "2":
                     litri = int(input("Litri: "))
                     freezer = input("Ha il Freezer? [S]/[N]): ").lower() == "s"
                     elettrodom = Frigorifero(marca, modello, anno, guasto, litri, freezer)
-                    officina.aggiungiElettrodomestico(elettrodom)
+                    bob_aggiustatutto.aggiungiElettrodomestico(elettrodom)
                 case "3":
                     while True:
                         alimentazione = input("Tipo di Alimentazione [Elettrico]/[Gas]: ").lower()
@@ -141,42 +149,123 @@ while True:
                             print("Cosa pensi, che aggiusti utensili a", alimentazione, "o a Carbone? Riprova!")
                     ventilato = input("Ha la Funzione ventilata? [S]/[N]: ").lower() == "s"
                     elettrodom = Forno(marca, modello, anno, guasto, alimentazione, ventilato)
-                    officina.aggiungiElettrodomestico(elettrodom)
+                    bob_aggiustatutto.aggiungiElettrodomestico(elettrodom)
                 case _:
                     print("Tipo non valido!")
 
         case "2":
-            if officina.get_elettrodomestici():
-                print("Nessun elettrodomestico in officina!")
+            if len(bob_aggiustatutto.get_elettrodomestici()) == 0:
+                print("Nessun elettrodomestico rimasto in officina!")
+                print("Facciamo schifo e non ci chiama nessuno o siamo troppo bravi e veloci a risolvere problemi?")
                 continue
+            while True:
+                id_ticket = input("Inserisci ID per il nuovo ticket: ")
+                if not id_ticket.isdigit(): 
+                    print("L'ID deve essere un numero!")
+                    continue
+                for t in bob_aggiustatutto.get_tickets():
+                    if t.get_id() == int(id_ticket):
+                        print("L'ID", t.get_id(),"è già esistente!")
+                        continue
+                break
             print("Elettrodomestici disponibili:")
-            for i in range(len(officina.elettrodomestici)):
-                print(i+1, "-", officina.elettrodomestici[i].descriviElettrodomestico())
-            selezione = input("Scegli numero: ")
-            if selezione.isdigit():
-                pass
-            else:
-                print("Non hai inserito un numero!")
+            for i in range(len(bob_aggiustatutto.get_elettrodomestici)):
+                print(i+1, "-", bob_aggiustatutto.get_elettrodomestici()[i].descriviElettrodomestico())
+            while True:
+                selezione = input("Scegli elettrodometico:")
+                if selezione.isdigit():
+                    idx_elettrodom = int(selezione) - 1
+                    if len(bob_aggiustatutto.elettrodomestici) > idx_elettrodom >= 0:
+                        ticket = TicketRiparazione(int(id_ticket), bob_aggiustatutto.elettrodomestici[idx_elettrodom])
+                        bob_aggiustatutto.tickets.append(ticket)
+                        print("Ticket", id_ticket, "aperto!")
+                        break
+                    else:
+                        print("Numero non valido!")
+                else:
+                    print("Non hai inserito un numero!")
 
         case "3":
-            pass
+            if len(bob_aggiustatutto.tickets) == 0:
+                print("Nessun ticket aperto!")
+                continue
+            print("Ticket aperti:")
+            for t in bob_aggiustatutto.tickets:
+                if t.get_stato() == "aperto":
+                    print("ID:", t.get_id(), "-", t.get_elettrodomestico().descriviElettrodomestico())
+            while True:
+                selezione = input("Scelgi ticket aperto: ")
+                if selezione.isdigit():
+                    id_ticket_scelto = int(selezione)
+                    for t in bob_aggiustatutto.tickets:
+                        if t.get_id() == id_ticket_scelto and t.get_stato() == "aperto":
+                            lista_costo_serv_agg = []
+                            print("Servizi extra disponibili:")
+                            print("0 - Nessun Servizio, 0 € (Esci)")
+                            bob_aggiustatutto.stampaServizi()
+                            voci_extra = input("Inserisci Numeri Servizi (interi separati da spazio): ").split()
+                            if len(voci_extra) == 1 and voci_extra[0] == 0:
+                                print("Ciao")
+                                break
+                            for strg in voci_extra:
+                                if strg.isdigit() == False:
+                                    print("Non hai inserito solo numeri interi!")
+                                    break
+                                idx_serv_agg = int(strg)-1
+                                if idx_serv_agg < len(bob_aggiustatutto.servizi_aggiuntivi):
+                                    lista_costo_serv_agg.append(bob_aggiustatutto.servizi_aggiuntivi[bob_aggiustatutto.servizi_aggiuntivi()[idx_serv_agg]])
+                                else:
+                                    print("Seleziona un servizio esistente!")
+                                    break
+                                print("Il totale del preventivo con servizi extra è:", t.calcolaPreventivo(*lista_costo_serv_agg))
+                        else:
+                            print("Ticket non trovato o già chiuso!")
+                else:
+                    print("Devi inserire un ID numerico!")
 
         case "4":
-            pass
+            if len(bob_aggiustatutto.tickets) == 0:
+                print("Nessun ticket aperto!")
+                continue
+            print("Ticket aperti:")
+            for t in bob_aggiustatutto.tickets:
+                if t.get_stato() == "aperto":
+                    print("ID:", t.get_id(), "-", t.get_elettrodomestico().descriviElettrodomestico())
+            while True:
+                selezione = input("Scelgi ticket da chiudere: ")
+                if selezione.isdigit():
+                    id_ticket_scelto = int(selezione)
+                    for t in bob_aggiustatutto.tickets:
+                        if t.get_id() == id_ticket_scelto:
+                            if t.get_stato() == "aperto":
+                                t.set_stato("chiuso")
+                                print("Ticket", id_ticket_scelto, "chiuso!")
+                            else:
+                                print("Il ticket", id_ticket_scelto, "è già", ticket.get_stato())
+                            break
+                    print("Ticket non trovato!")
+                else:
+                    print("Devi inserire un ID numerico!")
 
         case "5":
-            if len(officina.elettrodomestici) == 0:
+            if len(bob_aggiustatutto.elettrodomestici) == 0:
                 print("Nessun elettrodomestico in officina!")
             else:
                 print("Elettrodomestici:")
-                for i in range(len(officina.elettrodomestici)):
-                    print(i+1, "-", officina.elettrodomestici[i].descriviElettrodomestico())
+                for i in range(len(bob_aggiustatutto.get_elettrodomestici())):
+                    print(i+1, "-", bob_aggiustatutto.get_elettrodomestici()[i].descriviElettrodomestico())
 
         case "6":
-            officina.calcolaStatisticheTipo()
+            if len(bob_aggiustatutto.tickets) == 0:
+                print("Nessun ticket aperto!")
+                continue
+            bob_aggiustatutto.calcolaStatisticheTipo()
 
         case "7":
-            print("Totale preventivi:", officina.calcolaTotalePreventivo(), "€")
+            if len(bob_aggiustatutto.tickets) == 0:
+                print("Nessun ticket aperto!")
+                continue
+            print("Totale preventivi:", bob_aggiustatutto.calcolaTotalePreventivo(), "€")
 
         case "8":
             print("Grazie per aver usato il gestionale officina!")
@@ -185,136 +274,3 @@ while True:
         
         case _:
             print("Possibile che tu sia così incapace?")
-
-
-'''      
-        case "2":
-            if officina.get_elettrodomestici():
-                print("Nessun elettrodomestico in officina!")
-                continue
-            
-            officina.()
-            scelta = int(input("\nScegli numero elettrodomestico (1, 2, ...): ")) - 1
-            
-            if 0 <= scelta < len(officina.get_elettrodomestici()):
-                elettro = officina.get_elettrodomestici()[scelta]
-                officina.aggiungiTicket(elettro)
-            else:
-                print("Scelta non valida!")
- 
-    
-     
-        case "3":
-            officina.stampa_ticket_aperti()
-            if officina._Officina__ticket:
-                num = int(input("Numero ticket: "))
-                for ticket in officina._Officina__ticket:
-                    if ticket.getNumeroTicket() == num and ticket.getStato() == "aperto":
-                        print("\nServizi extra disponibili:")
-                        print("- ritiro_domicilio (€20)")
-                        print("- consegna_rapida (€15)")
-                        print("- ricambi_originali (€50)")
-                        print("- pulizia_gratuita (€10)")
-                        servizi = input("Inserisci servizi (separati da spazio): ").split()
-                        costo = ticket.calcola_costo_totale(*servizi)
-                        print(f"Costo totale ticket: €{costo}")
-                        break
-                else:
-                    print("Ticket non trovato o già chiuso!")
-        
-        case "4":
-            officina.stampa_ticket_aperti()
-            if officina._Officina__ticket:
-                num = int(input("Numero ticket da chiudere: "))
-                for ticket in officina._Officina__ticket:
-                    if ticket.getNumeroTicket() == num and ticket.getStato() == "aperto":
-                        if ticket.getCostoFinale() == 0:
-                            print("Il ticket non ha costo! Aggiungi prima i servizi.")
-                        else:
-                            ticket.chiudi_ticket()
-                        break
-                else:
-                    print("Ticket non trovato o già chiuso!")
-        
-        case "5":
-            officina.stampa_tutti_elettrodomestici()
-        
-        case "6":
-            print("\n--- FILTRA PER TIPO ---")
-            print("1. Lavatrice")
-            print("2. Frigorifero")
-            print("3. Forno")
-            tipo_filtro = input("Scegli: ")
-            
-            match tipo_filtro:
-                case "1":
-                    officina.cerca_per_tipo(Lavatrice)
-                case "2":regno di geovageova
-                    officina.cerca_per_tipo(Frigorifero)
-                case "3":
-                    officina.cerca_per_tipo(Forno)
-                case _:
-                    print("Tipo non valido!")
-        
-        case "7":
-            officina.totale_incassato()
-        
-        case "8":
-            print("\nGrazie per aver usato il gestionale officina!")
-            print("Arrivederci!")
-            break
-        
-        case _:
-            print("Scelta non valida!")
-
-
-
-
-#MANCA IL RESTO DEL MAIN
-# Nel menu, case "1" per aggiungere elettrodomestico:
-case "3":
-    print("Tipo alimentazione:")
-    print("1. Elettrico")
-    print("2. Gas")
-    scelta_alim = input("Scegli (1/2): ")
-    
-    if scelta_alim == "1":
-        alimentazione = "elettrico"
-    elif scelta_alim == "2":
-        alimentazione = "gas"
-    else:
-        pass
-    
-    scelta_ventilato = input("Ha funzione ventilata? (s/n): ").lower() == "s" # Torna True
-    
-
-# Metodo altenativo 1 alla riga superiore:
-    scelta_ventilato = input("Ha funzione ventilata? (s/n): ").lower()
-    
-    if scelta_ventilato == "s"
-        ventilato = True
-    elif scelta_ventilato == "n"
-        ventilato == False
-    else
-        print("Inserimento non corretto. Imposto NON ventilato di default")
-        ventilato = False
-
-# Metodo altenativo 2 alla riga superiore:
-    while True
-        
-        scelta_ventilato = input("Ha funzione ventilata? (s/n): ").lower()
-        
-        if scelta_ventilato == "s"
-            ventilato = True
-            break
-        elif scelta_ventilato == "n"
-            ventilato == False
-            break
-        else
-            print("Inserimento non corretto. Riprova!")
-
-
-    forno_1 = Forno(marca, modello, anno, guasto, alimentazione, ventilato)
-    officina.aggiungi_elettrodomestico(elettro)
-    
-'''

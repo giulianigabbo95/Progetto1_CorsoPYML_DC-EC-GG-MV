@@ -1,5 +1,3 @@
-import Lavatrice
-
 class TicketRiparazione:
 
     def __init__(self, id_ticket, elettrodomestico):

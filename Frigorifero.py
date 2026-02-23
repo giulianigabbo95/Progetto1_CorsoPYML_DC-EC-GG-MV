@@ -1,15 +1,15 @@
-import Elettrodomestico
+from Elettrodomestico import Elettrodomestico
 
 class Frigorifero(Elettrodomestico):
 
-    def __init__(self, litri, ha_freezer):
-        super().__init__()
+    def __init__(self, marca, modello, anno_acquisto, guasto, litri, ha_freezer):
+        super().__init__(marca, modello, anno_acquisto, guasto)
         self.litri = litri
         self.ha_freezer = ha_freezer
 
 
     def stimaCostoBase(self):
-        costo = 35
+        costo = super().stimaCostoBase()
         if self.litri > 300:
             costo += 25
         if self.ha_freezer:

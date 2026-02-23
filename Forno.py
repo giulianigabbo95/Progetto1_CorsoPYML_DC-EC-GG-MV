@@ -1,4 +1,4 @@
-import Elettrodomestico
+from Elettrodomestico import Elettrodomestico
 
 class Forno(Elettrodomestico):
 
@@ -10,7 +10,7 @@ class Forno(Elettrodomestico):
 
 
     def stimaCostoBase(self):
-        costo = super().stima_costo_base()
+        costo = super().stimaCostoBase()
         if self.tipo_alimentazione == "gas":
                 costo += 40
         if self.ha_ventilato == True:
